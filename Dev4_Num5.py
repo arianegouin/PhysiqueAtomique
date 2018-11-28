@@ -2,15 +2,15 @@
 
 class PB:
     def __init__(self):
-        self.A = 208
-        self.Z = 82
+        self.A = 208    # Nombre de masse
+        self.Z = 82     # Nombre atomique
 
         self.Vo = 50    # MeV
-        self.hw = 41 * self.A**(-1/3)
+        self.hw = 41 * self.A**(-1/3)    # MeV
         self.D = 0.0225 * self.hw
         self.C = 0.1 * self.hw
 
-        self.protons = [
+        self.protons = [                 # couches complètées pour 82 protons
                      [1, 0, 0.5],
                      [1, 1, 1.5],
                      [1, 1, 0.5],
@@ -26,10 +26,10 @@ class PB:
                      [1, 4, 3.5],
                      [3, 0, 0.5],
                      [2, 2, 1.5],
-                     [1, 5, 5.5],    # 82
+                     [1, 5, 5.5],         # 82 protons
                      ]
 
-        self.neutrons = [
+        self.neutrons = [                 # couches complétées pour 126 neutrons
                      [1, 0, 0.5],
                      [1, 1, 1.5],
                      [1, 1, 0.5],
@@ -45,14 +45,14 @@ class PB:
                      [1, 4, 3.5],
                      [3, 0, 0.5],
                      [2, 2, 1.5],
-                     [1, 5, 5.5],    # 82
+                     [1, 5, 5.5],         # 82 neutrons
 
                      [2, 3, 3.5],
                      [1, 5, 4.5],
                      [1, 6, 6.5],
                      [3, 1, 1.5],
                      [2, 3, 2.5],
-                     [3, 1, 0.5]    # 126
+                     [3, 1, 0.5]          # 126 neutrons
                      ]
 
 

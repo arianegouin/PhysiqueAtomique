@@ -6,6 +6,19 @@ import scipy
 # Omega = 2.23
 Omega = 3.57
 
+# def omegafunc(omega, big_omega, L):
+#     root = scipy.sqrt(1 - omega**2)
+#
+#     term1 = -1j * root
+#     term2 = ss.spherical_jn(L-1, big_omega * root) / ss.spherical_jn(L, big_omega * root)
+#     term3 = ss.spherical_jn(L, 1j * big_omega * omega) + 1j * ss.spherical_yn(L, 1j * big_omega * omega)
+#     term4 = ss.spherical_jn(L-1, 1j * big_omega * omega) + 1j * ss.spherical_yn(L-1, 1j * big_omega * omega)
+#
+#     return term1 * term2 * term3 / term4
+
+
+
+
 def f(x):
     return x
 
@@ -29,40 +42,28 @@ def f1(x):
 #     secdTerm = (ss.spherical_jn(L,b) + 1j*ss.spherical_yn(L,b)) / (ss.spherical_jn(L-1,b) + 1j * ss.spherical_yn(L-1,b))
 #     return coeff * firstTerm * secdTerm
 
-def omegafunc(omega, big_omega, L):
-    root = scipy.sqrt(1 - omega**2)
-
-    term1 = -1j * root
-    term2 = ss.spherical_jn(L-1, big_omega * root) / ss.spherical_jn(L, big_omega * root)
-    term3 = ss.spherical_jn(L, 1j * big_omega * omega) + 1j * ss.spherical_yn(L, 1j * big_omega * omega)
-    term4 = ss.spherical_jn(L-1, 1j * big_omega * omega) + 1j * ss.spherical_yn(L-1, 1j * big_omega * omega)
-
-    return term1 * term2 * term3 / term4
-
-print(omegafunc(0.1,2.23,1))
-
-# def BesselJn(L,x):
-#     return ss.spherical_jn(L, x)
+def BesselJn(L,x):
+    return ss.spherical_jn(L, x)
 
 def BesselYn(L,x):
     return ss.spherical_yn(L,x)
 
 w = [(i + 1)/100 for i in range(99)]
+x = [i for i in range(20)]
 
 f = [f(i) for i in w]
 f0 = [f0(i) for i in w]
-# f1 = [f1(i) for i in w]
+f1 = [f1(i) for i in w]
 
-# Bessel = [BesselYn(0,i) for i in w]
-# print(F(1,0.3))
+Bessel = [BesselJn(0,i) for i in x]
 
 # plt.plot(w,f)
 # plt.plot(w,f0)
 # plt.plot(w,f1)
 # plt.plot(w,F1)
 
-# plt.plot(w,Bessel)
+plt.plot(x,Bessel)
 # plt.plot(w,F0)
 
-# plt.show()
+plt.show()
 
