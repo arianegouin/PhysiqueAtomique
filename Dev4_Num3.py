@@ -3,67 +3,87 @@ from matplotlib import pyplot as plt
 import scipy.special as ss
 import scipy
 
-# Omega = 2.23
-Omega = 3.57
-
-# def omegafunc(omega, big_omega, L):
-#     root = scipy.sqrt(1 - omega**2)
-#
-#     term1 = -1j * root
-#     term2 = ss.spherical_jn(L-1, big_omega * root) / ss.spherical_jn(L, big_omega * root)
-#     term3 = ss.spherical_jn(L, 1j * big_omega * omega) + 1j * ss.spherical_yn(L, 1j * big_omega * omega)
-#     term4 = ss.spherical_jn(L-1, 1j * big_omega * omega) + 1j * ss.spherical_yn(L-1, 1j * big_omega * omega)
-#
-#     return term1 * term2 * term3 / term4
-
-
-
 
 def f(x):
     return x
+    
+def f0(x, Omega2):
+    return - (1 - x**2)**0.5 * (np.tan((Omega2 * (1 - x**2))**0.5))**-1
 
-def f0(x):
-    return - (1 - x**2)**0.5 * (np.tan((Omega * (1 - x**2))**0.5))**-1
+def F(L, x, Omega2):
+     a = scipy.sqrt((Omega2 * (1 - x**2)))
+     b = 1j * Omega2**0.5 * x
+     coeff = -1j * scipy.sqrt((1 - x**2))
+     firstTerm = ss.spherical_jn(L - 1,a) / ss.spherical_jn(L,a)
+     secdTerm = (ss.spherical_jn(L,b) + 1j*ss.spherical_yn(L,b)) / (ss.spherical_jn(L-1,b) + 1j * ss.spherical_yn(L-1,b))
+     return coeff * firstTerm * secdTerm
 
-def f1(x):
-    # return ((np.tan((Omega * (1 - x**2))**0.5))**-1 * (1 - x**2)**-0.5 - (Omega * x**2 * (1 - x**2))**-1)**-1
-    a = (1 - x**2)**0.5
-    b = np.tan(Omega**0.5 * a)**-1
-    c = Omega * x**2 * a**2
-    return (b / a - 1 / c)**-1
+# Omega^2 values
+singulet = 2.23 * 4
+triplet = 3.57 * 4
+
+# w values knowing w range is [0,1]
+w = np.array([(i + 1)/10000 for i in range(9999)])
+
+# left term of the transcendant equation
+f = np.array([f(i) for i in w])
+
+# right term of the transcendant equation
+f_00 = np.array([f0(i, singulet) for i in w])       # when (L,S) = (0,0)
+f_01 = np.array([f0(i, triplet) for i in w])        # when (L,S) = (0,1)
+F_10 = np.array([F(1,i, singulet) for i in w])      # when (L,S) = (1,0)
+F_11 = np.array([F(1,i, triplet) for i in w])       # when (L,S) = (1,1)
+
+# when (L,S) = (0,0)
+plt.figure()
+plt.plot(w,f)
+plt.plot(w,f_00)
+idx = np.argwhere(np.diff(np.sign(f_00 - f))).flatten()     # index where intersection is
+print('intersection 00', w[idx])                               # value of w for this index
+plt.plot(w[idx], f[idx], 'ro')
+plt.ylim([-1,10])
+plt.savefig('00', bbox_inches = 'tight')
+
+# when (L,S) = (0,1)
+plt.figure()
+plt.plot(w,f)
+plt.plot(w,f_01)
+idx = np.argwhere(np.diff(np.sign(f_01 - f))).flatten()     # index where intersection is
+print('intersection 01', w[idx])                               # value of w for this index
+plt.plot(w[idx], f[idx], 'ro')
+plt.ylim([-1,10])
+plt.savefig('01', bbox_inches = 'tight')
+
+# when (L,S) = (1,0)
+plt.figure()
+plt.plot(w,f)
+plt.plot(w,np.real(F_10))
+idx = np.argwhere(np.diff(np.sign(F_10 - f))).flatten()     # index where intersection is
+print('intersection 10', w[idx])                               # value of w for this index
+plt.plot(w[idx], f[idx], 'ro')
+plt.ylim([-10,10])
+plt.savefig('10', bbox_inches = 'tight')
+
+# when (L,S) = (1,1)
+plt.figure()
+plt.plot(w,f)
+plt.plot(w,np.real(F_11))
+idx = np.argwhere(np.diff(np.sign(F_11 - f))).flatten()     # index where intersection is
+print('intersection 11', w[idx])                               # value of w for this index
+plt.plot(w[idx], f[idx], 'ro')
+plt.ylim([-1,10])
+plt.savefig('11', bbox_inches = 'tight')
 
 
-# def F(L,x):
-#     a = scipy.sqrt((Omega * (1 - x**2)))
-#     b = 1j * Omega**0.5 * x
-#
-#     coeff = -1j * scipy.sqrt((1 - x**2))
-#     firstTerm = ss.spherical_jn(L - 1,a) / ss.spherical_jn(L,a)
-#     secdTerm = (ss.spherical_jn(L,b) + 1j*ss.spherical_yn(L,b)) / (ss.spherical_jn(L-1,b) + 1j * ss.spherical_yn(L-1,b))
-#     return coeff * firstTerm * secdTerm
 
-def BesselJn(L,x):
-    return ss.spherical_jn(L, x)
 
-def BesselYn(L,x):
-    return ss.spherical_yn(L,x)
-
-w = [(i + 1)/100 for i in range(99)]
-x = [i for i in range(20)]
-
-f = [f(i) for i in w]
-f0 = [f0(i) for i in w]
-f1 = [f1(i) for i in w]
-
-Bessel = [BesselJn(0,i) for i in x]
-
-# plt.plot(w,f)
-# plt.plot(w,f0)
-# plt.plot(w,f1)
-# plt.plot(w,F1)
-
-plt.plot(x,Bessel)
-# plt.plot(w,F0)
-
-plt.show()
-
+ww = np.array([(i + 1)/100 for i in range(99)])
+ff = np.array([f(i) for i in ww])
+F_LS = np.array([F(6,i, triplet) for i in ww])       # when (L,S) = (1,1)
+plt.figure()
+plt.plot(ww,ff)
+plt.plot(ww,np.real(F_LS))
+idx = np.argwhere(np.diff(np.sign(F_LS - ff))).flatten()     # index where intersection is
+print('intersection', ww[idx])                               # value of w for this index
+plt.plot(ww[idx], ff[idx], 'ro')
+plt.savefig('try', bbox_inches = 'tight')

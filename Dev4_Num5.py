@@ -55,7 +55,6 @@ class PB:
                      [3, 1, 0.5]          # 126 neutrons
                      ]
 
-
     def Enlsj(self,n,l,s,j):
         return - self.Vo + self.hw * (2 * (n - 1) + l + 3/2) - self.D * l * (l + 1) - self.C * (j * (j + 1) - l * (l + 1) - s * (s + 1)) / 2
 
